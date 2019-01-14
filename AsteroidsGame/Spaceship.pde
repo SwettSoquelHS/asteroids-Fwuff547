@@ -77,4 +77,14 @@ class Spaceship  extends Mover  {
     endShape();
     popMatrix();
   }
+  Bullet clone(float x, float y, float direction) {
+    Bullet newBullet = new Bullet(x, y, 4, direction);
+    return newBullet;
+  
+  }
+  void hyperSpace(Spaceship hero) {
+    hero.x =(float)(Math.random()*800);
+    hero.y =(float)(Math.random()*600);
+    hero.direction =(float)(Math.random()*360);
+  }
 }

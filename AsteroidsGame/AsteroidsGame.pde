@@ -2,7 +2,14 @@
  Class variable declarations here
  */
 Spaceship player1;
-//Asteroid[] asteroids;
+Asteroid[] lotsOfAsteroid = new Asteroid[8];
+Star[] starFeild = new Star[150];
+Bullet shot;
+Bullet newBullet;
+boolean[] pressed= new boolean[8];
+int round;
+
+
 //Star[] starField;
 
 
@@ -14,6 +21,7 @@ boolean ROTATE_RIGHT;
 boolean MOVE_FORWARD; 
 boolean MOVE_BACKWARD;
 boolean SPACE_BAR;    //User is pressing space bar
+boolean JUMP;
 
   
 /* * * * * * * * * * * * * * * * * * * * * * *
@@ -25,11 +33,26 @@ public void setup() {
   ROTATE_RIGHT = false; 
   MOVE_FORWARD = false; 
   MOVE_BACKWARD = false;
+  SPACE_BAR = false;
+  JUMP = false;
+  round = 0;
+  for(int i = 0; i < 8; i++){
+    pressed[i] = false;
+  }
   
   //initialize your asteroid array and fill it
   
   player1 = new Spaceship((float)width/2, (float)height/2, 1, 0.0);
-  
+  shot = new Bullet((float)width/2, (float)height/2, 1, 0.0);
+  for(int i = 0; i<8; i++) {
+    if(i%2 == 0)
+      lotsOfAsteroid[i] = new Asteroidv2((float)(Math.random()*800), (float)(Math.random()*600), (float)(Math.random()+1.5), (float)(Math.random()*360), (float)(Math.random()*360));
+    else
+      lotsOfAsteroid[i] = new Asteroid((float)(Math.random()*800), (float)(Math.random()*600), (float)(Math.random()+1.5), (float)(Math.random()*360), (float)(Math.random()*360));
+  }
+  for(int i = 0; i<150; i++) {
+    starFeild[i] = new Star((float)(Math.random()*800), (float)(Math.random()*600));
+  }
   //initialize starfield
 }
 
@@ -39,12 +62,16 @@ public void setup() {
  */
 public void draw() {
   //your code here
-  background(#2C3190);
+  background(#0D0A46);
   
   //Draw Starfield first 
   //TODO: Part I
-  fill(#2C3190, 80);
+  fill(#0D0A46, 80);
   rect(0,0,width, height);
+  for(int i = 0; i<150; i++) {
+    starFeild[i].show();
+  }
+  
   
   //Check bullet collisions
   //TODO: Part III or IV - for not just leave this comment
@@ -59,6 +86,9 @@ public void draw() {
 
   //Update spaceship
   //TODO: Part I
+  if(JUMP) {
+    player1.hyperSpace(player1);
+  }
   if(ROTATE_LEFT) {
       player1.direction -= 3.0;
     }
@@ -66,12 +96,12 @@ public void draw() {
       player1.direction += 3.0;
     }
     if(MOVE_FORWARD) {
-      if(player1.speed<3){
+      if(player1.speed<3.5){
         player1.speed+=.1;
       }
     }
     if(MOVE_BACKWARD) {
-      if(player1.speed>-3){
+      if(player1.speed>-3.5){
         player1.speed-=.1;
       }
     }
@@ -86,7 +116,12 @@ public void draw() {
       player1.speed = 0;
     }
   }
+  shot.x = player1.x;
+  shot.y = player1.y;
+  shot.direction = player1.direction;
+  shot.speed = player1.speed;
   player1.update();
+  shot.update();
   if(player1.x >800){
      player1.x = 0;
    }
@@ -100,13 +135,41 @@ public void draw() {
    if(player1.y <0){
      player1.y = 600;
    }
+   
+   for(int i = 0; i<8; i++) {
+      lotsOfAsteroid[i].show();
+    }
+    for(int i = 0; i<8; i++) {
+      lotsOfAsteroid[i].update();
+      if(lotsOfAsteroid[i].x >800)
+       lotsOfAsteroid[i].x = 0;
+     if(lotsOfAsteroid[i].x <0)
+       lotsOfAsteroid[i].x = 800;
+     if(lotsOfAsteroid[i].y>600)
+       lotsOfAsteroid[i].y = 0;
+     if(lotsOfAsteroid[i].y <0)
+       lotsOfAsteroid[i].y = 600;
+    }
   
   //Check for ship collision agaist asteroids
   //TODO: Part II or III
 
   //Draw spaceship & and its bullets
   //TODO: Part I, for now just render ship
+  shot.show();
   player1.show();
+  
+  if(SPACE_BAR && round<8) {
+    newBullet = shot.clone(player1.x, player1.y, player1.direction);
+    pressed[round] = true;
+    round++;         
+  }
+  for(int i = 0; i<8; i++) {
+    if(pressed[i]) {
+      newBullet.show();
+      newBullet.update();
+    }
+  }
   //TODO: Part IV - we will use a new feature in Java called an ArrayList, 
   //so for now we'll just leave this comment and come back to it in a bit. 
   
@@ -131,6 +194,10 @@ void keyPressed() {
     else if (keyCode == UP) {
       MOVE_FORWARD = true;
     }
+  }
+  if(keyCode == 72) {
+    JUMP = true;
+    
   }
 
   //32 is spacebar
@@ -159,5 +226,8 @@ void keyReleased() {
   }
   if (keyCode == 32) {
     SPACE_BAR = false;
+  }
+  if (keyCode == 72) {  
+    JUMP = false;
   }
 }
