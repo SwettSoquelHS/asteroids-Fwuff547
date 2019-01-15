@@ -5,9 +5,6 @@ Spaceship player1;
 Asteroid[] lotsOfAsteroid = new Asteroid[8];
 Star[] starFeild = new Star[150];
 Bullet shot;
-Bullet newBullet;
-boolean[] pressed= new boolean[8];
-int round;
 
 
 //Star[] starField;
@@ -35,10 +32,6 @@ public void setup() {
   MOVE_BACKWARD = false;
   SPACE_BAR = false;
   JUMP = false;
-  round = 0;
-  for(int i = 0; i < 8; i++){
-    pressed[i] = false;
-  }
   
   //initialize your asteroid array and fill it
   
@@ -77,6 +70,7 @@ public void draw() {
   //TODO: Part III or IV - for not just leave this comment
 
   //TODO: Part II, Update each of the Asteroids internals
+  checkOnasteroids();
 
   //Check for asteroid collisions against other asteroids and alter course
   //TODO: Part III, for now keep this comment in place
@@ -90,49 +84,49 @@ public void draw() {
     player1.hyperSpace(player1);
   }
   if(ROTATE_LEFT) {
-      player1.direction -= 3.0;
+      player1.direction -= 4.0;
     }
     if(ROTATE_RIGHT) {
-      player1.direction += 3.0;
+      player1.direction += 4.0;
     }
     if(MOVE_FORWARD) {
-      if(player1.speed<3.5){
-        player1.speed+=.1;
+      if(player1.getSpeed()<4){
+        player1.speed+=.2;
       }
     }
     if(MOVE_BACKWARD) {
-      if(player1.speed>-3.5){
-        player1.speed-=.1;
+      if(player1.getSpeed()>-4){
+        player1.speed-=.2;
       }
     }
    if (!MOVE_FORWARD && !MOVE_BACKWARD) {
-    if(player1.speed < 0){
+    if(player1.getSpeed() < 0){
       player1.speed+=.05;
     }
-    if(player1.speed > 0){
+    else if(player1.getSpeed() > 0){
       player1.speed-=.05;
     }
-    if(player1.speed == 0){
+    else{
       player1.speed = 0;
     }
   }
-  shot.x = player1.x;
-  shot.y = player1.y;
-  shot.direction = player1.direction;
-  shot.speed = player1.speed;
+  shot.x = player1.getX();
+  shot.y = player1.getY();
+  shot.setDirection(player1.getDirection());
+  shot.setSpeed(player1.getSpeed());
   player1.update();
   shot.update();
-  if(player1.x >800){
+  if(player1.getX() >800){
      player1.x = 0;
    }
-   if(player1.x <0){
+   if(player1.getX() <0){
      player1.x = 800;
 
    }
-   if(player1.y>600){
+   if(player1.getY()>600){
      player1.y = 0;
    }
-   if(player1.y <0){
+   if(player1.getY() <0){
      player1.y = 600;
    }
    
@@ -141,13 +135,13 @@ public void draw() {
     }
     for(int i = 0; i<8; i++) {
       lotsOfAsteroid[i].update();
-      if(lotsOfAsteroid[i].x >800)
+      if(lotsOfAsteroid[i].getX() >800)
        lotsOfAsteroid[i].x = 0;
-     if(lotsOfAsteroid[i].x <0)
+     if(lotsOfAsteroid[i].getX() <0)
        lotsOfAsteroid[i].x = 800;
-     if(lotsOfAsteroid[i].y>600)
+     if(lotsOfAsteroid[i].getY()>600)
        lotsOfAsteroid[i].y = 0;
-     if(lotsOfAsteroid[i].y <0)
+     if(lotsOfAsteroid[i].getY() <0)
        lotsOfAsteroid[i].y = 600;
     }
   
@@ -159,15 +153,14 @@ public void draw() {
   shot.show();
   player1.show();
   
-  if(SPACE_BAR && round<8) {
-    newBullet = shot.clone(player1.x, player1.y, player1.direction);
-    pressed[round] = true;
-    round++;         
+  if(SPACE_BAR) {
+    player1.fired(); 
+    
   }
   for(int i = 0; i<8; i++) {
-    if(pressed[i]) {
-      newBullet.show();
-      newBullet.update();
+    if(i<player1.round) {      
+      player1.clip[i].show();
+      player1.clip[i].update();
     }
   }
   //TODO: Part IV - we will use a new feature in Java called an ArrayList, 
@@ -230,4 +223,18 @@ void keyReleased() {
   if (keyCode == 72) {  
     JUMP = false;
   }
+}
+
+void checkOnasteroids(){
+  for(int i = 0; i < lotsOfAsteroid.length; i++) {
+    Asteroid a = lotsOfAsteroid[i];
+    for(int j = 0; j < lotsOfAsteroid.length; j++) {
+      Asteroid b = lotsOfAsteroid[j];
+      if( i != j && a.collidingWith(b)){
+        a.direction = a.direction-150;
+        b.direction = b.direction +160;
+      }
+    } 
+  }
+  
 }

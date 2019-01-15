@@ -5,12 +5,20 @@
     might be useful.
 */
 class Spaceship  extends Mover  {
+  Bullet[] clip;
+  int round;
+  int wait;
   
   public Spaceship (float x, float y){
     super(x,y);
   }
   public Spaceship(float x, float y, float speed, float direction){
     super(x, y, speed, direction);
+    clip = new Bullet[8];
+    round = 0;
+    wait = 0;
+    
+    
   }
   
   void show() {
@@ -77,10 +85,23 @@ class Spaceship  extends Mover  {
     endShape();
     popMatrix();
   }
+  
+  void update() {
+    x = x + speed*(float)Math.cos(radians(direction));
+    y = y + speed*(float)Math.sin(radians(direction));
+    wait--;
+  }
   Bullet clone(float x, float y, float direction) {
     Bullet newBullet = new Bullet(x, y, 4, direction);
     return newBullet;
   
+  }
+  void fired () {
+    if(round<8 && wait<0){
+      clip[round] = clone(player1.x, player1.y, player1.direction);
+      round++;
+      wait = 10;
+    }
   }
   void hyperSpace(Spaceship hero) {
     hero.x =(float)(Math.random()*800);

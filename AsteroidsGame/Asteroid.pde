@@ -15,6 +15,7 @@ class Asteroid extends Mover{
   
   public Asteroid(float x, float y, float speed, float direction, float rotation) {
     super(x, y, speed, direction);
+    radius = 20;
     this.rotation = rotation;
   }
 
@@ -22,7 +23,7 @@ class Asteroid extends Mover{
     pushMatrix();
     translate((float)x, (float)y);
     rotate(radians(rotation));
-    scale(1.5);
+    scale(2);
     fill(75);
     beginShape();
     vertex(-5+(int)Math.random()*4-2, -5);

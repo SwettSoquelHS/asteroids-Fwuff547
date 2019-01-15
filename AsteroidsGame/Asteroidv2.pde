@@ -4,11 +4,12 @@ public class Asteroidv2 extends Asteroid{
   }
   public Asteroidv2(float x, float y, float speed, float direction, float rotation) {
     super(x, y, speed, direction, rotation);
+    radius = 20;
   }
   void show() {
     pushMatrix();
     translate((float)x, (float)y);
-    scale(1.5);
+    scale(2);
     rotate(radians(rotation));
     fill(75);
     beginShape();
