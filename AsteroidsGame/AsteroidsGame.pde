@@ -4,7 +4,7 @@
 Spaceship player1;
 Asteroid[] lotsOfAsteroid = new Asteroid[8];
 Star[] starFeild = new Star[150];
-Bullet shot;
+
 
 
 //Star[] starField;
@@ -36,7 +36,6 @@ public void setup() {
   //initialize your asteroid array and fill it
   
   player1 = new Spaceship((float)width/2, (float)height/2, 1, 0.0);
-  shot = new Bullet((float)width/2, (float)height/2, 1, 0.0);
   for(int i = 0; i<8; i++) {
     if(i%2 == 0)
       lotsOfAsteroid[i] = new Asteroidv2((float)(Math.random()*800), (float)(Math.random()*600), (float)(Math.random()+1.5), (float)(Math.random()*360), (float)(Math.random()*360));
@@ -71,6 +70,7 @@ public void draw() {
 
   //TODO: Part II, Update each of the Asteroids internals
   checkOnasteroids();
+  checkOnBullets();
 
   //Check for asteroid collisions against other asteroids and alter course
   //TODO: Part III, for now keep this comment in place
@@ -110,12 +110,8 @@ public void draw() {
       player1.speed = 0;
     }
   }
-  shot.x = player1.getX();
-  shot.y = player1.getY();
-  shot.setDirection(player1.getDirection());
-  shot.setSpeed(player1.getSpeed());
+  
   player1.update();
-  shot.update();
   if(player1.getX() >800){
      player1.x = 0;
    }
@@ -150,17 +146,30 @@ public void draw() {
 
   //Draw spaceship & and its bullets
   //TODO: Part I, for now just render ship
-  shot.show();
+ 
   player1.show();
   
   if(SPACE_BAR) {
     player1.fired(); 
     
   }
-  for(int i = 0; i<8; i++) {
+  for(int i = 0; i<player1.clip.length; i++) {
     if(i<player1.round) {      
       player1.clip[i].show();
       player1.clip[i].update();
+      if(player1.clip[i].getX() >800){
+        player1.spent(i);
+      }
+      if(player1.clip[i].getX() <0){
+        player1.spent(i);
+      }
+      if(player1.clip[i].getY() >600){
+        player1.spent(i);
+      }
+      if(player1.clip[i].getY() <0){
+        player1.spent(i);
+      }
+        
     }
   }
   //TODO: Part IV - we will use a new feature in Java called an ArrayList, 
@@ -237,4 +246,18 @@ void checkOnasteroids(){
     } 
   }
   
+}
+
+void checkOnBullets() {
+  for(int i = 0; i < lotsOfAsteroid.length; i++) {
+    for(int j = 0; j<player1.clip.length; j++) {
+      if(j<player1.round) {      
+        if(player1.clip[j].collidingWith(lotsOfAsteroid[i])){
+          player1.spent(j); 
+          
+        }
+      }
+    }
+  }
+          
 }

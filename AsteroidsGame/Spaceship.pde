@@ -14,9 +14,13 @@ class Spaceship  extends Mover  {
   }
   public Spaceship(float x, float y, float speed, float direction){
     super(x, y, speed, direction);
+    radius = 60;
     clip = new Bullet[8];
     round = 0;
     wait = 0;
+    for(int i =0; i<clip.length; i++){
+      clip[i] = null;
+    }
     
     
   }
@@ -92,12 +96,12 @@ class Spaceship  extends Mover  {
     wait--;
   }
   Bullet clone(float x, float y, float direction) {
-    Bullet newBullet = new Bullet(x, y, 4, direction);
+    Bullet newBullet = new Bullet(x, y, 5.5, direction);
     return newBullet;
   
   }
   void fired () {
-    if(round<8 && wait<0){
+    if(round<clip.length && wait<0){
       clip[round] = clone(player1.x, player1.y, player1.direction);
       round++;
       wait = 10;
@@ -108,4 +112,21 @@ class Spaceship  extends Mover  {
     hero.y =(float)(Math.random()*600);
     hero.direction =(float)(Math.random()*360);
   }
+  void spent(int bullet) {
+    clip = removeBullet(clip, bullet);
+    round-=1;
+    
+  }
+  public Bullet[] removeBullet(Bullet[] arr, int index){
+        Bullet[] result = new Bullet[arr.length];
+        for(int i =0; i < index; i++) {
+            result[i] = arr[i];
+        }
+        for(int j = index+1; j < arr.length; j++) {
+            result[j-1] = arr[j];
+        }
+        result[arr.length-1] = null;
+        return result;
+    }
+  
 }
