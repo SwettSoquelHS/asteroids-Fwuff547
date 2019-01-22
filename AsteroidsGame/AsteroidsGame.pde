@@ -54,11 +54,9 @@ public void setup() {
  */
 public void draw() {
   //your code here
-  background(#0D0A46);
-  
   //Draw Starfield first 
   //TODO: Part I
-  fill(#0D0A46, 80);
+  fill(0, 80);
   rect(0,0,width, height);
   for(int i = 0; i<150; i++) {
     starFeild[i].show();
