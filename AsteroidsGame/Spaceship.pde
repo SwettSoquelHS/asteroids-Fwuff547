@@ -96,7 +96,7 @@ class Spaceship  extends Mover  {
     wait--;
   }
   Bullet clone(float x, float y, float direction) {
-    Bullet newBullet = new Bullet(x, y, 5.5, direction);
+    Bullet newBullet = new Bullet(x, y, 5.75, direction);
     return newBullet;
   
   }
@@ -104,7 +104,7 @@ class Spaceship  extends Mover  {
     if(round<clip.length && wait<0){
       clip[round] = clone(player1.x, player1.y, player1.direction);
       round++;
-      wait = 10;
+      wait = 12;
     }
   }
   void hyperSpace(Spaceship hero) {
@@ -114,7 +114,8 @@ class Spaceship  extends Mover  {
   }
   void spent(int bullet) {
     clip = removeBullet(clip, bullet);
-    round-=1;
+    if(round>0)
+      round-=1;
     
   }
   public Bullet[] removeBullet(Bullet[] arr, int index){
@@ -125,7 +126,7 @@ class Spaceship  extends Mover  {
         for(int j = index+1; j < arr.length; j++) {
             result[j-1] = arr[j];
         }
-        result[arr.length-1] = null;
+        result[arr.length-1] = new Bullet(900.0,900.0,0.0,0.0);
         return result;
     }
   
