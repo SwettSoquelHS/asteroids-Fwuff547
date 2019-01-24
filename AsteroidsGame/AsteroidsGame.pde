@@ -1,8 +1,9 @@
+import java.util.ArrayList;
 /* * * * * * * * * * * * * * * * * * * * * * *
  Class variable declarations here
  */
 Spaceship player1;
-Asteroid[] lotsOfAsteroid = new Asteroid[8];
+ArrayList lotsOfAsteroid = new ArrayList();
 Star[] starFeild = new Star[150];
 
 
@@ -38,9 +39,9 @@ public void setup() {
   player1 = new Spaceship((float)width/2, (float)height/2, 1, 0.0);
   for(int i = 0; i<8; i++) {
     if(i%2 == 0)
-      lotsOfAsteroid[i] = new Asteroidv2((float)(Math.random()*800), (float)(Math.random()*600), (float)(Math.random()+1.5), (float)(Math.random()*360), (float)(Math.random()*360));
+      lotsOfAsteroid.add(new Asteroidv2((float)(Math.random()*800), (float)(Math.random()*600), (float)(Math.random()+1.5), (float)(Math.random()*360), (float)(Math.random()*360)));
     else
-      lotsOfAsteroid[i] = new Asteroid((float)(Math.random()*800), (float)(Math.random()*600), (float)(Math.random()+1.5), (float)(Math.random()*360), (float)(Math.random()*360));
+      lotsOfAsteroid.add(new Asteroid((float)(Math.random()*800), (float)(Math.random()*600), (float)(Math.random()+1.5), (float)(Math.random()*360), (float)(Math.random()*360)));
   }
   for(int i = 0; i<150; i++) {
     starFeild[i] = new Star((float)(Math.random()*800), (float)(Math.random()*600));
@@ -124,19 +125,19 @@ public void draw() {
      player1.y = 600;
    }
    
-   for(int i = 0; i<8; i++) {
-      lotsOfAsteroid[i].show();
-    }
+
     for(int i = 0; i<8; i++) {
-      lotsOfAsteroid[i].update();
-      if(lotsOfAsteroid[i].getX() >800)
-       lotsOfAsteroid[i].x = 0;
-     if(lotsOfAsteroid[i].getX() <0)
-       lotsOfAsteroid[i].x = 800;
-     if(lotsOfAsteroid[i].getY()>600)
-       lotsOfAsteroid[i].y = 0;
-     if(lotsOfAsteroid[i].getY() <0)
-       lotsOfAsteroid[i].y = 600;
+      Asteroid ass = (Asteroid)lotsOfAsteroid.get(i);
+      ass.update();
+      ass.show();
+      if(ass.getX() >800)
+       ass.x = 0;
+     if(ass.getX() <0)
+       ass.x = 800;
+     if(ass.getY()>600)
+       ass.y = 0;
+     if(ass.getY() <0)
+       ass.y = 600;
     }
   
   //Check for ship collision agaist asteroids
@@ -151,20 +152,21 @@ public void draw() {
     player1.fired(); 
     
   }
-  for(int i = 0; i<player1.clip.length; i++) {
-    if(i<player1.round) {      
-      player1.clip[i].show();
-      player1.clip[i].update();
-      if(player1.clip[i].getX() >800){
+  for(int i = 0; i<player1.clip.size(); i++) {
+    if(i<player1.round) {  
+      Bullet asg = (Bullet)player1.clip.get(i);
+      asg.show();
+      asg.update();
+      if(asg.getX() >800){
         player1.spent(i);
       }
-      if(player1.clip[i].getX() <0){
+      if(asg.getX() <0){
         player1.spent(i);
       }
-      if(player1.clip[i].getY() >600){
+      if(asg.getY() >600){
         player1.spent(i);
       }
-      if(player1.clip[i].getY() <0){
+      if(asg.getY() <0){
         player1.spent(i);
       }
         
@@ -233,10 +235,10 @@ void keyReleased() {
 }
 
 void checkOnasteroids(){
-  for(int i = 0; i < lotsOfAsteroid.length; i++) {
-    Asteroid a = lotsOfAsteroid[i];
-    for(int j = 0; j < lotsOfAsteroid.length; j++) {
-      Asteroid b = lotsOfAsteroid[j];
+  for(int i = 0; i < lotsOfAsteroid.size(); i++) {
+    Asteroid a = (Asteroid)lotsOfAsteroid.get(i);
+    for(int j = 0; j < lotsOfAsteroid.size(); j++) {
+      Asteroid b = (Asteroid)lotsOfAsteroid.get(j);;
       if( i != j && a.collidingWith(b)){
         a.direction = a.direction-150;
         b.direction = b.direction +160;
@@ -247,10 +249,12 @@ void checkOnasteroids(){
 }
 
 void checkOnBullets() {
-  for(int i = 0; i < lotsOfAsteroid.length; i++) {
-    for(int j = 0; j<player1.clip.length; j++) {
-      if(j<player1.round) {      
-        if(player1.clip[j].collidingWith(lotsOfAsteroid[i])){
+  for(int i = 0; i < lotsOfAsteroid.size(); i++) {
+    Asteroid ass = (Asteroid)lotsOfAsteroid.get(i);
+    for(int j = 0; j<player1.clip.size(); j++) {
+      if(j<player1.round) {  
+        Bullet asg = (Bullet)player1.clip.get(j);
+        if(asg.collidingWith(ass)){
           player1.spent(j); 
           
         }
