@@ -3,7 +3,7 @@ import java.util.ArrayList;
  Class variable declarations here
  */
 Spaceship player1;
-ArrayList lotsOfAsteroid = new ArrayList();
+ArrayList<Asteroid> lotsOfAsteroid = new ArrayList<Asteroid>();
 Star[] starFeild = new Star[150];
 
 
@@ -236,9 +236,9 @@ void keyReleased() {
 
 void checkOnasteroids(){
   for(int i = 0; i < lotsOfAsteroid.size(); i++) {
-    Asteroid a = (Asteroid)lotsOfAsteroid.get(i);
+    Asteroid a = lotsOfAsteroid.get(i);
     for(int j = 0; j < lotsOfAsteroid.size(); j++) {
-      Asteroid b = (Asteroid)lotsOfAsteroid.get(j);;
+      Asteroid b = lotsOfAsteroid.get(j);;
       if( i != j && a.collidingWith(b)){
         a.direction = a.direction-150;
         b.direction = b.direction +160;
@@ -250,10 +250,10 @@ void checkOnasteroids(){
 
 void checkOnBullets() {
   for(int i = 0; i < lotsOfAsteroid.size(); i++) {
-    Asteroid ass = (Asteroid)lotsOfAsteroid.get(i);
+    Asteroid ass = lotsOfAsteroid.get(i);
     for(int j = 0; j<player1.clip.size(); j++) {
       if(j<player1.round) {  
-        Bullet asg = (Bullet)player1.clip.get(j);
+        Bullet asg = player1.clip.get(j);
         if(asg.collidingWith(ass)){
           player1.spent(j); 
           

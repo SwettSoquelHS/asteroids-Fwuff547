@@ -6,7 +6,7 @@ import java.util.ArrayList;
     might be useful.
 */
 class Spaceship  extends Mover  {
-  ArrayList clip;
+  ArrayList<Bullet> clip;
   int round;
   int wait;
   
@@ -16,7 +16,7 @@ class Spaceship  extends Mover  {
   public Spaceship(float x, float y, float speed, float direction){
     super(x, y, speed, direction);
     radius = 60;
-    clip = new ArrayList();
+    clip = new ArrayList<Bullet>();
     round = 0;
     wait = 0;
     
@@ -99,7 +99,7 @@ class Spaceship  extends Mover  {
       Bullet bull = new Bullet(x, y, 5.75, direction);
       clip.add(bull);
       round++;
-      wait = 12;
+      wait = 14;
     }
   }
   void hyperSpace(Spaceship hero) {
