@@ -9,16 +9,18 @@ class Spaceship  extends Mover  {
   ArrayList<Bullet> clip;
   int round;
   int wait;
+  int playerlife;
   
   public Spaceship (float x, float y){
     super(x,y);
   }
   public Spaceship(float x, float y, float speed, float direction){
     super(x, y, speed, direction);
-    radius = 60;
+    radius = 20;
     clip = new ArrayList<Bullet>();
     round = 0;
     wait = 0;
+    playerlife = 3;
     
     
     

@@ -33,6 +33,7 @@ public void setup() {
   MOVE_BACKWARD = false;
   SPACE_BAR = false;
   JUMP = false;
+
   
   //initialize your asteroid array and fill it
   
@@ -70,6 +71,7 @@ public void draw() {
   //TODO: Part II, Update each of the Asteroids internals
   checkOnasteroids();
   checkOnBullets();
+  checkOnShip();
 
   //Check for asteroid collisions against other asteroids and alter course
   //TODO: Part III, for now keep this comment in place
@@ -126,7 +128,7 @@ public void draw() {
    }
    
 
-    for(int i = 0; i<8; i++) {
+    for(int i = 0; i<lotsOfAsteroid.size(); i++) {
       Asteroid ass = (Asteroid)lotsOfAsteroid.get(i);
       ass.update();
       ass.show();
@@ -255,11 +257,29 @@ void checkOnBullets() {
       if(j<player1.round) {  
         Bullet asg = player1.clip.get(j);
         if(asg.collidingWith(ass)){
-          player1.spent(j); 
+          player1.spent(j);
+          if(ass.getRadius() != 18) {
+            lotsOfAsteroid.add(new HalfAsteroid(ass.getX()+21, ass.getY()+21, (float)(Math.random()+2), ass.getDirection()+90, ass.rotation));
+            lotsOfAsteroid.add(new HalfAsteroid(ass.getX()-21, ass.getY()-21, (float)(Math.random()+2), ass.getDirection()-90, ass.rotation));
+          }
+          lotsOfAsteroid.remove(i);
           
         }
       }
     }
   }
           
+}
+
+void checkOnShip(){
+  for(int i = 0; i < lotsOfAsteroid.size(); i++) {
+    Asteroid a = lotsOfAsteroid.get(i);
+    if(a.collidingWith(player1)){
+      player1.playerlife-=1;
+      lotsOfAsteroid.remove(i);
+      if(player1.playerlife <=0) {
+        noLoop();
+      }    
+    } 
+  } 
 }
