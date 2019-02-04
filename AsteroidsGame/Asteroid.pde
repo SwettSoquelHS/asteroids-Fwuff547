@@ -8,15 +8,17 @@
 */
 class Asteroid extends Mover{ 
   float rotation;
+  int collide;
   
   public Asteroid (float x, float y){
     super(x,y);
   }
   
-  public Asteroid(float x, float y, float speed, float direction, float rotation) {
+  public Asteroid(float x, float y, float speed, float direction, float rotation, int collide) {
     super(x, y, speed, direction);
     radius = 20;
     this.rotation = rotation;
+    collide = 0;
   }
 
   void show() {
@@ -57,6 +59,7 @@ class Asteroid extends Mover{
     x = (x + (float)Math.cos(direction)*speed);
     y = (y + (float)Math.sin(direction)*speed);
     rotation+=2;
+    collide--;
 
   }
   //your code here

@@ -4,7 +4,7 @@ import java.util.ArrayList;
  */
 Spaceship player1;
 ArrayList<Asteroid> lotsOfAsteroid = new ArrayList<Asteroid>();
-Star[] starFeild = new Star[150];
+Star[] starFeild = new Star[300];
 
 
 
@@ -26,7 +26,7 @@ boolean JUMP;
   Initialize all of your variables and game state here
  */
 public void setup() {
-  size(800, 600);
+  size(1000, 800);
   ROTATE_LEFT = false;  
   ROTATE_RIGHT = false; 
   MOVE_FORWARD = false; 
@@ -40,12 +40,12 @@ public void setup() {
   player1 = new Spaceship((float)width/2, (float)height/2, 1, 0.0);
   for(int i = 0; i<8; i++) {
     if(i%2 == 0)
-      lotsOfAsteroid.add(new Asteroidv2((float)(Math.random()*800), (float)(Math.random()*600), (float)(Math.random()+1.5), (float)(Math.random()*360), (float)(Math.random()*360)));
+      lotsOfAsteroid.add(new Asteroidv2((float)(Math.random()*width), (float)(Math.random()*height), (float)(Math.random()+1.5), (float)(Math.random()*360), (float)(Math.random()*360), 0));
     else
-      lotsOfAsteroid.add(new Asteroid((float)(Math.random()*800), (float)(Math.random()*600), (float)(Math.random()+1.5), (float)(Math.random()*360), (float)(Math.random()*360)));
+      lotsOfAsteroid.add(new Asteroid((float)(Math.random()*width), (float)(Math.random()*height), (float)(Math.random()+1.5), (float)(Math.random()*360), (float)(Math.random()*360), 0));
   }
-  for(int i = 0; i<150; i++) {
-    starFeild[i] = new Star((float)(Math.random()*800), (float)(Math.random()*600));
+  for(int i = 0; i<300; i++) {
+    starFeild[i] = new Star((float)(Math.random()*width), (float)(Math.random()*height));
   }
   //initialize starfield
 }
@@ -60,9 +60,11 @@ public void draw() {
   //TODO: Part I
   fill(0, 80);
   rect(0,0,width, height);
-  for(int i = 0; i<150; i++) {
+  for(int i = 0; i<300; i++) {
     starFeild[i].show();
   }
+  textSize(32);
+  text("Lives:"+ player1.playerlife, 10, 30);
   
   
   //Check bullet collisions
@@ -113,18 +115,18 @@ public void draw() {
   }
   
   player1.update();
-  if(player1.getX() >800){
+  if(player1.getX() >width){
      player1.x = 0;
    }
    if(player1.getX() <0){
-     player1.x = 800;
+     player1.x = width;
 
    }
-   if(player1.getY()>600){
+   if(player1.getY()>height){
      player1.y = 0;
    }
    if(player1.getY() <0){
-     player1.y = 600;
+     player1.y = height;
    }
    
 
@@ -132,14 +134,14 @@ public void draw() {
       Asteroid ass = (Asteroid)lotsOfAsteroid.get(i);
       ass.update();
       ass.show();
-      if(ass.getX() >800)
+      if(ass.getX() >width)
        ass.x = 0;
      if(ass.getX() <0)
-       ass.x = 800;
-     if(ass.getY()>600)
+       ass.x = width;
+     if(ass.getY()>height)
        ass.y = 0;
      if(ass.getY() <0)
-       ass.y = 600;
+       ass.y = height;
     }
   
   //Check for ship collision agaist asteroids
@@ -159,27 +161,49 @@ public void draw() {
       Bullet asg = (Bullet)player1.clip.get(i);
       asg.show();
       asg.update();
-      if(asg.getX() >800){
+      if(asg.getX() >width){
         player1.spent(i);
       }
       if(asg.getX() <0){
         player1.spent(i);
       }
-      if(asg.getY() >600){
+      if(asg.getY() >height){
         player1.spent(i);
       }
       if(asg.getY() <0){
         player1.spent(i);
       }
         
-    }
+   }
   }
+    
+  if(player1.score == 24) {
+    for(int i = 0; i<12; i++) {
+      if(i%2 == 0){
+        lotsOfAsteroid.add(new Asteroidv2((float)(Math.random()*width), (float)(Math.random()*height), (float)(Math.random()+1.5), (float)(Math.random()*360), (float)(Math.random()*360), 0));
+      }
+      else{
+        lotsOfAsteroid.add(new Asteroid((float)(Math.random()*width), (float)(Math.random()*height), (float)(Math.random()+1.5), (float)(Math.random()*360), (float)(Math.random()*360), 0));
+      }
+    }
+    player1.playerlife = 3;
+  }
+  
+  if(player1.playerlife<=0) {
+     fill(0);
+     rect(0,0,width, height);
+     fill(#F00C0C);
+     text("Game Over", width/2, height/2);
+     noLoop();
+  }
+    
   //TODO: Part IV - we will use a new feature in Java called an ArrayList, 
   //so for now we'll just leave this comment and come back to it in a bit. 
   
   //Update score
   //TODO: Keep track of a score and output the score at the top right
 }
+
 
 
 
@@ -240,10 +264,12 @@ void checkOnasteroids(){
   for(int i = 0; i < lotsOfAsteroid.size(); i++) {
     Asteroid a = lotsOfAsteroid.get(i);
     for(int j = 0; j < lotsOfAsteroid.size(); j++) {
-      Asteroid b = lotsOfAsteroid.get(j);;
-      if( i != j && a.collidingWith(b)){
+      Asteroid b = lotsOfAsteroid.get(j);
+      if( i != j && a.collidingWith(b)&& a.collide<0&&b.collide<0){
         a.direction = a.direction-150;
         b.direction = b.direction +160;
+        a.collide = 10;
+        b.collide = 10;
       }
     } 
   }
@@ -259,10 +285,11 @@ void checkOnBullets() {
         if(asg.collidingWith(ass)){
           player1.spent(j);
           if(ass.getRadius() != 18) {
-            lotsOfAsteroid.add(new HalfAsteroid(ass.getX()+21, ass.getY()+21, (float)(Math.random()+2), ass.getDirection()+90, ass.rotation));
-            lotsOfAsteroid.add(new HalfAsteroid(ass.getX()-21, ass.getY()-21, (float)(Math.random()+2), ass.getDirection()-90, ass.rotation));
+            lotsOfAsteroid.add(new HalfAsteroid(ass.getX()+21, ass.getY()+21, (float)(Math.random()+2), ass.getDirection()+90, ass.rotation, 0));
+            lotsOfAsteroid.add(new HalfAsteroid(ass.getX()-21, ass.getY()-21, (float)(Math.random()+2), ass.getDirection()-90, ass.rotation, 0));
           }
           lotsOfAsteroid.remove(i);
+          player1.score++;
           
         }
       }
@@ -274,12 +301,15 @@ void checkOnBullets() {
 void checkOnShip(){
   for(int i = 0; i < lotsOfAsteroid.size(); i++) {
     Asteroid a = lotsOfAsteroid.get(i);
-    if(a.collidingWith(player1)){
+    if(a.collidingWith(player1) && player1.collide<0){
       player1.playerlife-=1;
-      lotsOfAsteroid.remove(i);
-      if(player1.playerlife <=0) {
-        noLoop();
-      }    
+      player1.collide = 14;
+      if(a.getRadius() != 18) {
+            lotsOfAsteroid.add(new HalfAsteroid(a.getX()+21, a.getY()+21, (float)(Math.random()+2), a.getDirection()+90, a.rotation, 0));
+            lotsOfAsteroid.add(new HalfAsteroid(a.getX()-21, a.getY()-21, (float)(Math.random()+2), a.getDirection()-90, a.rotation, 0));
+       }
+       lotsOfAsteroid.remove(i);
+       player1.score++;
     } 
   } 
 }

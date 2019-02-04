@@ -8,8 +8,9 @@ import java.util.ArrayList;
 class Spaceship  extends Mover  {
   ArrayList<Bullet> clip;
   int round;
-  int wait;
+  int wait, collide;
   int playerlife;
+  int score;
   
   public Spaceship (float x, float y){
     super(x,y);
@@ -21,6 +22,8 @@ class Spaceship  extends Mover  {
     round = 0;
     wait = 0;
     playerlife = 3;
+    collide = 0;
+    score = 0;
     
     
     
@@ -95,18 +98,19 @@ class Spaceship  extends Mover  {
     x = x + speed*(float)Math.cos(radians(direction));
     y = y + speed*(float)Math.sin(radians(direction));
     wait--;
+    collide--;
   }
   void fired () {
     if(round<8 && wait<0 && clip.size()<8){
-      Bullet bull = new Bullet(x, y, 5.75, direction);
+      Bullet bull = new Bullet(x, y, 7, direction);
       clip.add(bull);
       round++;
       wait = 14;
     }
   }
   void hyperSpace(Spaceship hero) {
-    hero.x =(float)(Math.random()*800);
-    hero.y =(float)(Math.random()*600);
+    hero.x =(float)(Math.random()*width);
+    hero.y =(float)(Math.random()*height);
     hero.direction =(float)(Math.random()*360);
   }
   void spent(int bullet) {
