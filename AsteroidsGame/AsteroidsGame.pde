@@ -26,7 +26,7 @@ boolean JUMP;
   Initialize all of your variables and game state here
  */
 public void setup() {
-  size(1000, 800);
+  size(900, 700);
   ROTATE_LEFT = false;  
   ROTATE_RIGHT = false; 
   MOVE_FORWARD = false; 
@@ -38,11 +38,11 @@ public void setup() {
   //initialize your asteroid array and fill it
   
   player1 = new Spaceship((float)width/2, (float)height/2, 1, 0.0);
-  for(int i = 0; i<8; i++) {
+  for(int i = 0; i<9; i++) {
     if(i%2 == 0)
-      lotsOfAsteroid.add(new Asteroidv2((float)(Math.random()*width), (float)(Math.random()*height), (float)(Math.random()+1.5), (float)(Math.random()*360), (float)(Math.random()*360), 0));
+      lotsOfAsteroid.add(new Asteroidv2((float)(Math.random()*width), (float)(Math.random()*height), (float)(Math.random()+2), (float)(Math.random()*360), (float)(Math.random()*360), 0));
     else
-      lotsOfAsteroid.add(new Asteroid((float)(Math.random()*width), (float)(Math.random()*height), (float)(Math.random()+1.5), (float)(Math.random()*360), (float)(Math.random()*360), 0));
+      lotsOfAsteroid.add(new Asteroid((float)(Math.random()*width), (float)(Math.random()*height), (float)(Math.random()+2), (float)(Math.random()*360), (float)(Math.random()*360), 0));
   }
   for(int i = 0; i<300; i++) {
     starFeild[i] = new Star((float)(Math.random()*width), (float)(Math.random()*height));
@@ -65,6 +65,7 @@ public void draw() {
   }
   textSize(32);
   text("Lives:"+ player1.playerlife, 10, 30);
+  text("Score:"+ player1.score, width-120, height-670);
   
   
   //Check bullet collisions
@@ -87,10 +88,10 @@ public void draw() {
     player1.hyperSpace(player1);
   }
   if(ROTATE_LEFT) {
-      player1.direction -= 4.0;
+      player1.direction -= 3.0;
     }
     if(ROTATE_RIGHT) {
-      player1.direction += 4.0;
+      player1.direction += 3.0;
     }
     if(MOVE_FORWARD) {
       if(player1.getSpeed()<4){
@@ -176,18 +177,6 @@ public void draw() {
         
    }
   }
-    
-  if(player1.score == 24) {
-    for(int i = 0; i<12; i++) {
-      if(i%2 == 0){
-        lotsOfAsteroid.add(new Asteroidv2((float)(Math.random()*width), (float)(Math.random()*height), (float)(Math.random()+1.5), (float)(Math.random()*360), (float)(Math.random()*360), 0));
-      }
-      else{
-        lotsOfAsteroid.add(new Asteroid((float)(Math.random()*width), (float)(Math.random()*height), (float)(Math.random()+1.5), (float)(Math.random()*360), (float)(Math.random()*360), 0));
-      }
-    }
-    player1.playerlife = 3;
-  }
   
   if(player1.playerlife<=0) {
      fill(0);
@@ -265,7 +254,7 @@ void checkOnasteroids(){
     Asteroid a = lotsOfAsteroid.get(i);
     for(int j = 0; j < lotsOfAsteroid.size(); j++) {
       Asteroid b = lotsOfAsteroid.get(j);
-      if( i != j && a.collidingWith(b)&& a.collide<0&&b.collide<0){
+      if( i != j && a.collidingWith(b) && a.collide<0 && b.collide<0){
         a.direction = a.direction-150;
         b.direction = b.direction +160;
         a.collide = 10;
@@ -285,8 +274,8 @@ void checkOnBullets() {
         if(asg.collidingWith(ass)){
           player1.spent(j);
           if(ass.getRadius() != 18) {
-            lotsOfAsteroid.add(new HalfAsteroid(ass.getX()+21, ass.getY()+21, (float)(Math.random()+2), ass.getDirection()+90, ass.rotation, 0));
-            lotsOfAsteroid.add(new HalfAsteroid(ass.getX()-21, ass.getY()-21, (float)(Math.random()+2), ass.getDirection()-90, ass.rotation, 0));
+            lotsOfAsteroid.add(new HalfAsteroid(ass.getX()+21, ass.getY()+21, (float)(Math.random()+2.5), ass.getDirection()+90, ass.rotation, 0));
+            lotsOfAsteroid.add(new HalfAsteroid(ass.getX()-21, ass.getY()-21, (float)(Math.random()+2.5), ass.getDirection()-90, ass.rotation, 0));
           }
           lotsOfAsteroid.remove(i);
           player1.score++;
