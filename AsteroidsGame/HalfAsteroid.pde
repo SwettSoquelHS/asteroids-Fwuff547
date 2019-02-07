@@ -4,7 +4,7 @@ public class HalfAsteroid extends Asteroid{
   }
   public HalfAsteroid(float x, float y, float speed, float direction, float rotation, int collide) {
     super(x, y, speed, direction, rotation, collide);
-    radius = 18;
+    radius = 16;
     collide = 0;
   }
   void show() {

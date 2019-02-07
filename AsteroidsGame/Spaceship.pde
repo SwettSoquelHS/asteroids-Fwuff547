@@ -8,7 +8,7 @@ import java.util.ArrayList;
 class Spaceship  extends Mover  {
   ArrayList<Bullet> clip;
   int round;
-  int wait, collide;
+  int wait, collide, start;
   int playerlife;
   int score;
   
@@ -24,6 +24,7 @@ class Spaceship  extends Mover  {
     playerlife = 3;
     collide = 0;
     score = 0;
+    start = 14;
     
     
     
@@ -99,6 +100,7 @@ class Spaceship  extends Mover  {
     y = y + speed*(float)Math.sin(radians(direction));
     wait--;
     collide--;
+    start--;
   }
   void fired () {
     if(round<8 && wait<0 && clip.size()<8){

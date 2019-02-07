@@ -63,9 +63,9 @@ public void draw() {
   for(int i = 0; i<300; i++) {
     starFeild[i].show();
   }
-  textSize(32);
+  textSize(32); 
   text("Lives:"+ player1.playerlife, 10, 30);
-  text("Score:"+ player1.score, width-120, height-670);
+  text("Score:"+ player1.score, width-140, height-670);
   
   
   //Check bullet collisions
@@ -273,7 +273,7 @@ void checkOnBullets() {
         Bullet asg = player1.clip.get(j);
         if(asg.collidingWith(ass)){
           player1.spent(j);
-          if(ass.getRadius() != 18) {
+          if(ass.getRadius() != 16) {
             lotsOfAsteroid.add(new HalfAsteroid(ass.getX()+21, ass.getY()+21, (float)(Math.random()+2.5), ass.getDirection()+90, ass.rotation, 0));
             lotsOfAsteroid.add(new HalfAsteroid(ass.getX()-21, ass.getY()-21, (float)(Math.random()+2.5), ass.getDirection()-90, ass.rotation, 0));
           }
@@ -290,10 +290,10 @@ void checkOnBullets() {
 void checkOnShip(){
   for(int i = 0; i < lotsOfAsteroid.size(); i++) {
     Asteroid a = lotsOfAsteroid.get(i);
-    if(a.collidingWith(player1) && player1.collide<0){
+    if(a.collidingWith(player1) && player1.collide<0 && player1.start<0){
       player1.playerlife-=1;
       player1.collide = 14;
-      if(a.getRadius() != 18) {
+      if(a.getRadius() != 16) {
             lotsOfAsteroid.add(new HalfAsteroid(a.getX()+21, a.getY()+21, (float)(Math.random()+2), a.getDirection()+90, a.rotation, 0));
             lotsOfAsteroid.add(new HalfAsteroid(a.getX()-21, a.getY()-21, (float)(Math.random()+2), a.getDirection()-90, a.rotation, 0));
        }

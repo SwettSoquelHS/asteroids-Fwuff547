@@ -4,7 +4,7 @@ public class Asteroidv2 extends Asteroid{
   }
   public Asteroidv2(float x, float y, float speed, float direction, float rotation, int collide) {
     super(x, y, speed, direction, rotation, collide);
-    radius = 20;
+    radius = 21;
   }
   void show() {
     pushMatrix();

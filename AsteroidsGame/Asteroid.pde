@@ -16,7 +16,7 @@ class Asteroid extends Mover{
   
   public Asteroid(float x, float y, float speed, float direction, float rotation, int collide) {
     super(x, y, speed, direction);
-    radius = 20;
+    radius = 21;
     this.rotation = rotation;
     collide = 0;
   }
